@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+        ></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
+    <body class="bg-gray-100 p-6">
+        <div
+            x-data="orderForm()"
+            x-init="$nextTick(() => init())"
+            class="max-w-6xl mx-auto bg-white p-6 rounded shadow"
+        >
+            <h1 class="text-2xl font-bold mb-4">Create New Sales Order</h1>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <div>
+                    <label class="block text-sm font-semibold"
+                        >Customer Name</label
+                    >
+                    <input
+                        x-model="customer"
+                        type="text"
+                        class="w-full border p-2 rounded"
+                        placeholder="Enter customer name"
+                    />
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold"
+                        >Order Date</label
+                    >
+                    <input
+                        x-model="date"
+                        type="date"
+                        class="w-full border p-2 rounded"
+                    />
+                </div>
+            </div>
+            <h2 class="text-xl font-semibold mb-2">Add Product</h2>
+
+            <div class="grid grid-cols-4 gap-4 mb-4">
+                <select x-model="form.productId" class="border p-2 rounded">
+                    <option value="">Select Product</option>
+                    <template x-for="p in products">
+                        <option :value="p.product_id" x-text="p.name"></option>
+                    </template>
+                </select>
+
+                <select x-model="form.unit" class="border p-2 rounded">
+                    <option value="">Unit</option>
+                    <option value="pcs">PCS</option>
+                    <option value="box">BOX</option>
+                </select>
+
+                <input
+                    x-model.number="form.qty"
+                    type="number"
+                    class="border p-2 rounded"
+                    placeholder="Qty"
+                />
+
+                <button
+                    @click="addItem()"
+                    class="bg-green-600 text-white rounded hover:bg-green-700"
+                >
+                    Add
+                </button>
+            </div>
+
+            <table class="w-full border border-gray-300 mb-4">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="border p-2">Product</th>
+                        <th class="border p-2">Unit</th>
+                        <th class="border p-2">Qty</th>
+                        <th class="border p-2">Price</th>
+                        <th class="border p-2">Subtotal</th>
+                        <th class="border p-2">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="cartTableBody">
+                    <template x-for="(item, i) in cart" :key="i">
+                        <tr>
+                            <td class="border p-2" x-text="item.product"></td>
+                            <td
+                                class="border p-2"
+                                x-text="item.unit.toUpperCase()"
+                            ></td>
+                            <td class="border p-2">
+                                <input
+                                    type="number"
+                                    min="1"
+                                    class="w-20 p-1 text-center"
+                                    x-model.number="item.qty"
+                                    @input="updateSubtotal(item)"
+                                    @focus="$event.target.select()"
+                                />
+                            </td>
+                            <td
+                                class="border p-2"
+                                x-text="item.price.toLocaleString()"
+                            ></td>
+                            <td
+                                class="border p-2"
+                                x-text="item.subtotal.toLocaleString()"
+                            ></td>
+                            <td class="border p-2 text-center">
+                                <button
+                                    class="text-red-600"
+                                    @click="removeItem(i)"
+                                >
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+
+            <div class="w-1/3 ml-auto space-y-2">
+                <div class="flex justify-between">
+                    <span>Subtotal</span>
+                    <span x-text="subtotal.toLocaleString()"></span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Discount</span>
+                    <span
+                        x-text="`${discount.value.toLocaleString()} (${discount.percent}%)`"
+                    ></span>
+                </div>
+                <div class="flex justify-between font-bold">
+                    <span>Grand Total</span>
+                    <span x-text="grandTotal.toLocaleString()"></span>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2 mt-6">
+                <a href="index.html" class="px-4 py-2 border rounded">
+                    Cancel
+                </a>
+                <button
+                    @click="saveOrder()"
+                    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                >
+                    Save Order
+                </button>
+            </div>
+        </div>
+        <script src="js/order.js"></script>
+    </body>
+</html>
