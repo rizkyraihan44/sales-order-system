@@ -1,8 +1,16 @@
 function orderList() {
     return {
         orders: [],
+        user: {},
 
         init() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                location.href = 'login.html';
+                return;
+            }
+            this.user = currentUser;
+
             const savedOrders = localStorage.getItem('orders');
             this.orders = savedOrders ? JSON.parse(savedOrders) : [];
         },
@@ -22,11 +30,23 @@ function orderList() {
         remove(id) {
             if (!confirm('Delete this order?')) return;
 
+            const order = this.orders.find((o) => o.order_id === id);
+
+            if (this.user.role === 'staff' && order.status !== 'Draft') {
+                alert('You can only delete orders with Draft status');
+                return;
+            }
+
             this.orders = this.orders.filter((o) => o.order_id !== id);
             localStorage.setItem('orders', JSON.stringify(this.orders));
         },
 
         changeStatus(id) {
+            if (this.user.role !== 'admin') {
+                alert('Only admin can change order status');
+                return;
+            }
+
             const order = this.orders.find((o) => o.order_id === id);
             if (!order) return;
 
