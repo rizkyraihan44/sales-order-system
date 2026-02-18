@@ -18,6 +18,13 @@ function orderForm() {
         },
 
         async init() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                location.href = 'login.html';
+                return;
+            }
+            this.user = currentUser;
+
             this.products = await fetch('data/products.json').then((r) =>
                 r.json(),
             );
@@ -110,6 +117,12 @@ function orderForm() {
                 return;
             }
 
+            if (this.user.role === 'staff' && order.status !== 'Draft') {
+                alert('You are not allowed to edit this order');
+                location.href = 'index.html';
+                return;
+            }
+
             this.isEdit = true;
             this.customer = order.customer;
             this.date = order.date;
@@ -143,6 +156,7 @@ function orderForm() {
                         '0',
                     )}`,
                     status: 'Draft',
+                    created_by: this.user.username,
                     ...payload,
                 });
             }
