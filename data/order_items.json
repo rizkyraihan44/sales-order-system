@@ -1,0 +1,11 @@
+[
+    {
+        "order_id": "ORD001",
+        "product_id": "P001",
+        "product_name": "Aqua 600ml",
+        "unit_type": "box",
+        "qty": 2,
+        "price": 36000,
+        "subtotal": 72000
+    }
+]

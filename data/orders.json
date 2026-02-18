@@ -1,0 +1,20 @@
+[
+    {
+        "order_id": "ORD001",
+        "customer": "Budi Santoso",
+        "date": "2026-01-28",
+        "subtotal": 168000,
+        "discount": 10,
+        "grand_total": 151200,
+        "status": "Draft",
+        "items": [
+            {
+                "product": "Indomie Goreng",
+                "unit": "box",
+                "qty": 2,
+                "price": 84000,
+                "subtotal": 168000
+            }
+        ]
+    }
+]

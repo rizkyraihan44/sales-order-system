@@ -1,0 +1,14 @@
+[
+    {
+        "minimum_grand_total": 100000,
+        "discount_percentage": 5
+    },
+    {
+        "minimum_grand_total": 150000,
+        "discount_percentage": 10
+    },
+    {
+        "minimum_grand_total": 200000,
+        "discount_percentage": 15
+    }
+]

@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Sales Order List</title>
+        <script
+            defer
+            src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+        ></script>
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    </head>
+    <body class="bg-gray-100 p-6">
+        <div
+            x-data="orderList()"
+            x-init="init()"
+            class="max-w-6xl mx-auto bg-white p-6 rounded shadow"
+        >
+            <div class="flex justify-between items-center mb-4">
+                <h1 class="text-2xl font-bold">Sales Order List</h1>
+
+                <a
+                    href="order.html"
+                    class="bg-blue-600 text-white px-4 py-2 rounded"
+                >
+                    Generate New Order
+                </a>
+            </div>
+
+            <table class="w-full border">
+                <thead class="bg-gray-200">
+                    <tr>
+                        <th class="border p-2">Order ID</th>
+                        <th class="border p-2">Customer</th>
+                        <th class="border p-2">Date</th>
+                        <th class="border p-2">Total</th>
+                        <th class="border p-2">Status</th>
+                        <th class="border p-2">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <template x-for="order in orders" :key="order.order_id">
+                        <tr>
+                            <td
+                                class="border p-2 text-center"
+                                x-text="order.order_id"
+                            ></td>
+                            <td
+                                class="border p-2 text-center"
+                                x-text="order.customer"
+                            ></td>
+                            <td
+                                class="border p-2 text-center"
+                                x-text="order.date"
+                            ></td>
+                            <td
+                                class="border p-2 text-center"
+                                x-text="order.grand_total.toLocaleString()"
+                            ></td>
+                            <td class="border p-2 text-center">
+                                <span
+                                    x-text="order.status"
+                                    class="px-4 py-2 rounded"
+                                    :class="order.status === 'Approved' ? 'bg-green-600 text-white' : 'bg-blue-100 text-blue-800'"
+                                >
+                                </span>
+                            </td>
+                            <td class="border p-2 space-x-2 text-center">
+                                <button
+                                    @click="print(order.order_id)"
+                                    class="text-white bg-blue-600 px-4 py-1 rounded"
+                                >
+                                    Print
+                                </button>
+
+                                <button
+                                    @click="changeStatus(order.order_id)"
+                                    x-show="user && user.role === 'admin'"
+                                    class="text-white bg-orange-600 px-4 py-1 rounded"
+                                >
+                                    Change Status
+                                </button>
+
+                                <button
+                                    @click="edit(order.order_id)"
+                                    x-show="user && (user.role === 'admin' || order.status === 'Draft')"
+                                    class="text-white bg-green-600 px-4 py-1 rounded"
+                                >
+                                    Edit
+                                </button>
+
+                                <button
+                                    @click="remove(order.order_id)"
+                                    x-show="user && (user.role === 'admin' || order.status === 'Draft')"
+                                    class="text-white bg-red-600 px-4 py-1 rounded"
+                                >
+                                    Delete
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+            <template x-if="orders.length === 0">
+                <div class="text-center py-10">
+                    <p class="text-gray-500">No Orders Found</p>
+                    <button
+                        @click="loadDummy()"
+                        class="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+                    >
+                        Load Sample Data
+                    </button>
+                </div>
+            </template>
+        </div>
+        <script src="js/index.js"></script>
+    </body>
+</html>
